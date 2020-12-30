@@ -12,8 +12,11 @@ public class Plecy extends JPanel implements ActionListener {
     Timer timer;
 
     boolean zasilanie = false;
-    public int x_postac=100;
-    public int y_postac=100;
+    public int x_pocz=100;
+    public int y_pocz=100;
+    public int x_postac;
+    public int y_postac;
+    public int predkosc_y=0;
     boolean skok=false;
 
 
@@ -21,12 +24,15 @@ public class Plecy extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension(szerokosc_ekran,wysokosc_ekran));
         this.setBackground(Color.black);
         this.addKeyListener(new AdapterKlawiatury());
+        this.setFocusable(true);
 
         StartGry();
 
     }
 
     public void StartGry(){
+        x_postac=x_pocz;
+        y_postac=y_pocz;
         zasilanie=true;
         timer = new Timer(opoznienie,this);
         timer.start();
@@ -55,11 +61,25 @@ public class Plecy extends JPanel implements ActionListener {
     }
 
     public void Skok(){
-        y_postac+=5;
+        if (y_postac==y_pocz){
+            predkosc_y+=15;
+        }
+    }
+
+    public void grawitacja(){
+        if (y_postac>y_pocz){
+            predkosc_y-=5;
+        }
+        if (y_postac<y_pocz){
+            y_postac=y_pocz;
+            predkosc_y=0;
+        }
     }
 
     public void poruszanie(){
         x_postac+=1;
+        y_postac+=predkosc_y;
+        grawitacja();
         if (skok){
             Skok();
             skok=false;
